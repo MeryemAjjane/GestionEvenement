@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des événements</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .widget {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        h1, h2 {
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .table th {
+            background-color: #4CAF50;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .action-icons a {
+            margin-right: 10px;
+            color: #495057;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .action-icons a:hover {
+            color: #007bff;
+        }
+
+        .action-icons .edit-icon:hover {
+            color: #ffc107;
+        }
+
+        .action-icons .delete-icon:hover {
+            color: #dc3545;
+        }
+        .hands-icon {
+            color: #17a2b8; /* Bleu clair */
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        .hands-icon i {
+            margin-right: 5px;
+            transition: transform 0.2s ease, color 0.3s ease;
+        }
+
+        .hands-icon:hover i {
+            transform: scale(1.3);
+            color: #138496; /* Bleu plus foncé au survol */
+        }
+        /* Conteneur de l'icône Liste d'attente */
+        .waiting-list-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px; /* Espace entre les deux icônes */
+            color: #495057;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Effet hover */
+        .waiting-list-icon:hover {
+            color: #007bff;
+            transform: scale(1.1);
+        }
+        .users-icon {
+            color: #495057;
+            font-size: 1.5rem; /* Taille de l'icône */
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .widget {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        h1, h2 {
+            font-weight: 800;
+            font-size: 30px;
+            color: #495057;
+            text-align: left;
+            margin-right:530px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background-color: #B353B3;
+            border-color: #B353B3;
+            color: #fff;
+            max-height: 45px;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .table th {
+            background-color:#B353B3;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .action-icons a {
+            margin-right: 10px;
+            color: #495057;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .action-icons a:hover {
+            color: #495057;
+        }
+
+        .action-icons .edit-icon:hover {
+            color: #ffc107;
+        }
+
+        .action-icons .delete-icon:hover {
+            color: #dc3545;
+        }
+        .hands-icon {
+            color: #17a2b8; /* Bleu clair */
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        .hands-icon i {
+            margin-right: 5px;
+            transition: transform 0.2s ease, color 0.3s ease;
+        }
+
+        .hands-icon:hover i {
+            transform: scale(1.3);
+            color: #138496; /* Bleu plus foncé au survol */
+        }
+        /* Conteneur de l'icône Liste d'attente */
+        .waiting-list-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px; /* Espace entre les deux icônes */
+            color: #495057;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Effet hover */
+        .waiting-list-icon:hover {
+            color: #007bff;
+            transform: scale(1.1);
+        }
+        .users-icon {
+            color: #495057;
+            font-size: 1.5rem; /* Taille de l'icône */
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Effet au survol */
+        .users-icon:hover {
+            color: #007bff;
+            transform: scale(1.1); /* Agrandir légèrement au survol */
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            padding-top: 20px;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            font-size: 1.2rem;
+            color: #495057;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #B353B3;
+            transform: scale(1.1);
+        }
+
+        .btn-link {
+            color: #495057;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: #dc3545;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #495057; /* Couleur sombre élégante */
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style des éléments de navigation */
+        .nav-item {
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            font-size: 1.1rem;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-link i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .nav-link:hover {
+            background-color: #34495e; /* Couleur survol */
+            transform: scale(1.05);
+        }
+
+        .nav-link.active {
+            background-color: #B353B3;
+            color: white;
+        }
+
+        /* Spécificité du bouton logout */
+        .logout {
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logout:hover {
+            color: #B353B3; /* Rouge vif au survol */
+        }
+
+        /* Texte des éléments de la nav */
+        .nav-text {
+            font-weight: 500;
+        }
+
+        /* Partie principale du contenu */
+        main {
+            margin-left: 250px; /* Éspace pour la barre latérale */
+            padding: 20px;
+            background-color: #f4f6f9;
+        }
+
+        /* Table avec bordures fines et couleurs élégantes */
+        table {
+            width: 80%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        table thead {
+            background-color: #34495e;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #ecf0f1;
+        }
+
+        table tbody tr:hover {
+            background-color: #dcdde1; /* Couleur au survol */
+            transform: scale(1.02);
+        }
+
+        .action-icons a {
+            margin: 0 10px;
+            font-size: 1.3rem;
+            color: #2c3e50;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .action-icons a:hover {
+            color: #e74c3c;
+            transform: scale(1.2);
+        }
+        .alert {
+            display: flex;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+
+        .alert i {
+            margin-right: 8px;
+        }
+        /* Style the DataTable search bar */
+        .dataTables_filter input {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 14px;
+            width: 300px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_filter input:focus {
+            outline: none;
+            border-color: #B353B3;
+            box-shadow: 0 0 5px #B353B3;
+        }
+
+        /* Style the search label */
+        .dataTables_filter label {
+            font-size: 16px;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        /* Add spacing between the search bar and the table */
+        .dataTables_filter {
+            margin-bottom: 20px;
+        }
+
+        /* Style the DataTable */
+        table.dataTable {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.dataTable th, table.dataTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table.dataTable th {
+            background-color: #B353B3;
+            color: #fff;
+        }
+
+        table.dataTable tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Style for pagination and show entries */
+        .dataTables_length select {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .dataTables_paginate {
+            text-align: center;
+        }
+
+        .dataTables_paginate a {
+            padding: 5px 10px;
+            margin: 0 2px;
+            background-color: #B353B3;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .dataTables_paginate a:hover {
+            background-color: #495057;
+        }
+
+        /* Add responsiveness */
+        @media (max-width: 768px) {
+            .dataTables_filter input {
+                width: 100%;
+            }
+
+            table.dataTable th, table.dataTable td {
+                padding: 8px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Navbar verticale élégante -->
+        <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-user"></i>
+                            <span class="nav-text" th:text="${username}"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " th:href="@{/}">
+                            <i class="fas fa-home"></i>
+                            <span class="nav-text">Acceuil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/showpayement}">
+                            <i class="fa-solid fa-coins"></i>
+                            <span class="nav-text">Paiement</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" th:action="@{/logout}" class="d-inline">
+                            <button class="btn btn-link nav-link logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="nav-text">Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Contenu principal -->
+        <main role="main" class="col-md-10 ms-sm-auto col-lg-10 px-4">
+            <div class="widget">
+<!--                <h1>Bienvenue, <span th:text="${username}"></span></h1>-->
+
+                <h2> <i class="fa-solid fa-coins"></i>&nbsp;&nbsp;&nbsp;Liste des Payements</h2>
+                <table id="eventsTable" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Montant</th>
+                        <th>Date de Paiement </th>
+                        <th>Methode</th>
+                        <th>Status</th>
+                        <th>Nom de participant</th>
+                        <th>Nom de l'evenement</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="payer : ${paye}">
+                        <td th:text="${payer.id}"></td>
+                        <td th:text="${payer.amount +' DH '}"></td>
+                        <td th:text="${payer.datePaiement}"></td>
+                        <td th:text="${payer.methode}"></td>
+                        <td th:text="${payer.statut}"></td>
+                        <td th:text="${payer.participant.nomPrenom}"></td>
+                        <td th:text="${payer.evenement.titre}"></td>
+
+
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#eventsTable').DataTable({
+                "pagingType": "simple_numbers", // Pagination style
+                "pageLength": 10, // Number of records to show per page
+                "language": {
+                    "sSearch": "Chercher:",  // Custom label for search box
+                    "sLengthMenu": "Afficher _MENU_ lignes",  // Custom label for showing entries
+                    "oPaginate": {
+                        "sPrevious": "Précédent", // Previous button label
+                        "sNext": "Suivant"        // Next button label
+                    },
+                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées", // Custom info text
+                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée", // When no data is available
+                    "sInfoFiltered": " " // When data is filtered
+                }
+            });
+        });
+    </script>
+</body>
+</html>

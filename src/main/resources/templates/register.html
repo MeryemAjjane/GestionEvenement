@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Fond clair */
+            color: #333; /* Texte sombre mais pas noir */
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 380px;
+            margin-top: 1%;
+            box-sizing: border-box;
+        }
+
+        h3 {
+            font-weight: 600;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Flexbox pour mettre label et input sur la même ligne */
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #1a3a67 ;
+            font-weight: bold;/* Vert */
+            margin-bottom: 8px;
+            width: 40%; /* Largeur de l'étiquette */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 55%; /* Largeur des inputs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        #companyField {
+            margin-bottom: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50; /* Vert */
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Vert plus foncé au survol */
+        }
+
+        a {
+            color: #4CAF50; /* Lien vert */
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function toggleCompanyField() {
+            const organizerCheckbox = document.getElementById('organizerCheckbox');
+            const companyField = document.getElementById('companyField');
+            // Afficher ou masquer le champ Company Name en fonction de la case cochée
+            companyField.style.display = organizerCheckbox.checked ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+
+<form th:action="@{/register}" method="post" th:object="${utilisateur}">
+    <h3>Registre</h3>
+
+    <!-- Champ Nom complet -->
+    <div class="form-group">
+        <label for="nomPrenom">Nom complet:</label>
+        <input type="text" name="nomPrenom" placeholder="Nom complet" required>
+    </div>
+
+    <!-- Champ Email -->
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Email" required>
+    </div>
+
+    <!-- Champ Nom d'utilisateur -->
+    <div class="form-group">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+    </div>
+
+    <!-- Champ Numéro de téléphone -->
+    <div class="form-group">
+        <label for="numTele">Numéro de téléphone:</label>
+        <input type="text" name="numTele" placeholder="Numéro de téléphone" required>
+    </div>
+
+    <!-- Champ Mot de passe -->
+    <div class="form-group">
+        <label for="password">Mot de passe:</label>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+    </div>
+
+    <!-- Champ Confirmer mot de passe -->
+    <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe:</label>
+        <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" required>
+    </div>
+
+    <!-- Case à cocher pour organiser -->
+    <div class="form-group">
+        <label>
+            <input type="checkbox" id="organizerCheckbox" name="organisateur" onclick="toggleCompanyField()"> Êtes-vous un organisateur?
+        </label>
+    </div>
+
+    <!-- Champ Nom de l'entreprise masqué par défaut -->
+    <div id="companyField" style="display: none;">
+        <div class="form-group">
+            <label for="companyName">Nom de l'entreprise:</label>
+            <input type="text" name="companyName" placeholder="Nom de l'entreprise">
+        </div>
+    </div>
+
+    <button type="submit">Inscription</button>
+    <a th:href="@{/login}">Se connecter</a>
+
+</form>
+
+</body>
+</html>

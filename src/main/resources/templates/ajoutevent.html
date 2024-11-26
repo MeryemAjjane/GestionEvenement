@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+        h1, h2 {
+            font-weight: 600;
+            font-size: 28px;
+            color: #495057;
+            text-align: left;
+            margin-right:300px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            padding-top: 20px;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            font-size: 1.2rem;
+            color: #495057;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #B353B3;
+            transform: scale(1.1);
+        }
+
+        .btn-link {
+            color: #495057;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: #dc3545;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #495057; /* Couleur sombre élégante */
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style des éléments de navigation */
+        .nav-item {
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            font-size: 1.1rem;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-link i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .nav-link:hover {
+            background-color: #34495e; /* Couleur survol */
+            transform: scale(1.05);
+        }
+
+        .nav-link.active {
+            background-color: #B353B3;
+            color: white;
+        }
+
+        /* Spécificité du bouton logout */
+        .logout {
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logout:hover {
+            color: #B353B3; /* Rouge vif au survol */
+        }
+
+        /* Texte des éléments de la nav */
+        .nav-text {
+            font-weight: 500;
+        }
+
+        /* Partie principale du contenu */
+        main {
+            margin-left: 250px; /* Éspace pour la barre latérale */
+            padding: 20px;
+            background-color: #f4f6f9;
+        }
+
+
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h1 {
+            color: #2c3e50;
+        }
+
+        .btn-primary {
+            background-color: #B353B3;
+            border: none;
+        }
+
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">
+                <i class="fas fa-user"></i>
+                <span class="nav-text" th:text="${username}"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " th:href="@{/}">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Acceuil</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/showpayement}">
+                <i class="fas fa-coins"></i>
+                <span class="nav-text">Paiement</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <form method="post" th:action="@{/logout}" class="d-inline">
+                <button class="btn btn-link nav-link logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-text">Déconnexion</span>
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+<main>
+    <div class="form-container">
+        <h2><i class="fas fa-calendar-plus"></i>&nbsp;&nbsp;&nbsp;Nouveau evenement</h2>
+        <hr/>
+        <form th:action="@{/admin/addevent}" th:object="${evenement}" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Titre</label>
+                <input type="text" th:field="*{titre}" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text"  th:field="*{lieu}" class="form-control" id="location" name="location" required>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date"  th:field="*{date}" class="form-control" id="date" name="date" required>
+            </div>
+            <div class="mb-3">
+                <label for="capacity" class="form-label">Capacité</label>
+                <input type="number" th:field="*{capacite}" class="form-control" id="capacity" name="capacity" required>
+            </div>
+            <label for="prix" class="form-label">Prix</label>
+            <input type="number" id="prix" class="form-control" th:field="*{prix}" />
+            <div class="mb-3">
+                <label for="type" class="form-label" th:field="*{type}"> Type de l' evenement</label>
+                <select class="form-select" id="type" name="type" required>
+                    <option value="Conference">Conference</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Seminar">Seminar</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" style="max-height:4px" id="description" th:field="*{description}" name="description" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Creer</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>
