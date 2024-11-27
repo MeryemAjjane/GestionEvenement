@@ -487,11 +487,17 @@
 <body>
 
 <!-- Barre de navigation latérale -->
-<nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+<nav class="col-md-2 d-none d-md-block  sidebar">
     <div class="sidebar-sticky p-3">
         <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-text" th:text="${username}"></span>
+                </a>
+            </li>
             <li class="nav-item mb-2">
-                <a class="nav-link active" th:href="@{/}">
+                <a class="nav-link " th:href="@{/}">
                     <i class="fas fa-home"></i>
                     <span class="ms-2">Acceuil</span>
                 </a>
@@ -512,15 +518,15 @@
         <h1><i class="fas fa-coins"></i>&nbsp;&nbsp;&nbsp;Intégration de Paiement</h1>
         <form method="get" th:action="@{/user/payment/create}">
             <div class="mb-3">
-                <label for="method">Moyen de paiement</label>
+                <label for="method" class="form-label">Moyen de paiement</label>
                 <input id="method" type="text" name="method" value="Paypal" class="form-control" readonly />
             </div>
             <div class="mb-3">
-                <label for="amount">Montant</label>
+                <label for="amount" class="form-label">Montant</label>
                 <input type="text" id="amount" name="amount" th:value="${evenementOpt.prix}" class="form-control" readonly />
             </div>
             <div class="mb-3">
-                <label for="currency">Devise</label>
+                <label for="currency" class="form-label">Devise</label>
                 <select id="currency" name="currency" class="form-control">
                     <option value="USD" selected>USD</option>
                     <option value="EUR">EUR</option>

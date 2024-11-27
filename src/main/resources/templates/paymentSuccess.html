@@ -146,6 +146,31 @@
             color: #555;
             font-size: 1rem;
         }
+        /* Partie principale du contenu */
+        main {
+            margin-left: 250px; /* Éspace pour la barre latérale */
+            padding: 20px;
+            background-color: #f4f6f9;
+        }
+
+
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h1 {
+            color: #495057;
+        }
+
+        .btn-primary {
+            background-color: #B353B3;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -153,8 +178,14 @@
 <nav class="sidebar">
     <div class="sidebar-sticky p-3">
         <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-text" th:text="${username}"></span>
+                </a>
+            </li>
             <li class="nav-item mb-2">
-                <a class="nav-link active" th:href="@{/}">
+                <a class="nav-link " th:href="@{/}">
                     <i class="fas fa-home"></i>
                     <span class="ms-2">Accueil</span>
                 </a>
@@ -173,6 +204,7 @@
 
 <!-- Contenu principal -->
 <main>
+    <div class="form-container">
     <div class="widget">
         <h2><i class="fas fa-check-circle text-success"></i> Participation confirmée !</h2>
         <form th:action="@{/user/payment/success/{id}(id=${evenement.id})}" method="post">
@@ -189,7 +221,7 @@
             </a>
         </div>
     </div>
-</main>
+    </div></main>
 
 </body>
 </html>

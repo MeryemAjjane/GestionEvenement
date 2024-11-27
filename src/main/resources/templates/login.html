@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             height: 100vh;
-            background-image: url('https://les-seminaires.eu/wp-content/uploads/2019/04/organisation-evenement-entreprise-735x400.png'); /* Image de Pexels avec URL directe */
+            background-image: url('https://images.pexels.com/photos/9722652/pexels-photo-9722652.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* Image de Pexels avec URL directe */
             background-size: cover;
             background-position: center;
             margin: 0;
@@ -151,11 +151,10 @@
     <div class="">
         <div class="card">
             <!-- Affichage des erreurs -->
-            <div class="alert alert-danger">
-            <div th:if="${error != null}">
+            <div th:if="${error != null}" class="alert alert-danger">
                 <p  th:text="${error}"></p>
             </div>
-            </div>
+
             <div class="card-header">
                 Authentification
             </div>

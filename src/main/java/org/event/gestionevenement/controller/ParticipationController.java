@@ -5,18 +5,14 @@ import org.event.gestionevenement.Repository.ParticipationRepository;
 import org.event.gestionevenement.entities.Evenement;
 import org.event.gestionevenement.entities.Participation;
 import org.event.gestionevenement.entities.Utilisateur;
-import org.event.gestionevenement.service.EmailService;
-import org.event.gestionevenement.service.ParticipationService;
-import org.event.gestionevenement.service.UserDetailServiceImpl;
+import org.event.gestionevenement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,7 +32,14 @@ public class ParticipationController {
     private UserDetailServiceImpl userService;
     @Autowired
     EmailService emailService;
-//    @PostMapping("/participer/{id}")
+    @Autowired
+    EvaluationService evaluationService;
+    @Autowired
+    UserDetailServiceImpl userDetailService;
+    @Autowired
+    private EvenementServiceImpl evenementServiceImpl;
+
+    //    @PostMapping("/participer/{id}")
 //    public String participer(@PathVariable int id) {
 //        try {
 //            // Récupérer l'utilisateur connecté
@@ -83,6 +86,17 @@ public class ParticipationController {
 //            return "redirect:/?error=internalError";
 //        }
 //    }
+// Afficher form event
+@GetMapping("/pageevaluate/{id}")
+public String afficherFormulaireAjoutevale(@PathVariable int id, Model model) {
+        // Récupérer l'utilisateur connecté à partir de Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
+        model.addAttribute("username", username);
+        Evenement evenement = evenementServiceImpl.getEvenement(id);
+        model.addAttribute("evenement", evenement);
+        return "evaluation";
+    }
     @PostMapping("/waitingList/{id}")
     public String addToWaitingList(@PathVariable int id) {
         // Récupérer l'utilisateur connecté
@@ -119,5 +133,32 @@ public class ParticipationController {
 
         return "redirect:/?success=waitingListAdded";
     }
+    @PostMapping("/rate")
+    public String rateEvent(@RequestParam(name = "id") int id,Model model,
+                            @RequestParam(name = "rating") int rating,
+                            RedirectAttributes redirectAttributes) {
+        System.out.println("eval" + rating + " id " + id);
+
+        // Récupérer l'utilisateur actuellement authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // Nom d'utilisateur (email, username, etc.)
+
+        // Récupérer l'utilisateur depuis votre service ou repository
+        Utilisateur utilisateur =userDetailService.findByUsername(username);
+        if (utilisateur == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur non trouvé.");
+            return "redirect:/";
+        }
+        // Ajouter la notation
+        boolean response = evaluationService.AddRating(rating, id, utilisateur.getId());
+        if (response) {
+            redirectAttributes.addFlashAttribute("successMessage", "Rating added successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to add rating.");
+        }
+
+        return "redirect:/";
+    }
+
 }
 

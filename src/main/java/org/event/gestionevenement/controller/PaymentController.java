@@ -50,7 +50,12 @@ public class PaymentController {
 
     @GetMapping("/payment/{id}")
     public  String homepayement(@PathVariable int id, Model model){
+        // Récupérer l'utilisateur connecté à partir de Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
 
+
+        model.addAttribute("username", username);
         Optional<Evenement> evenementOpt = evenementRepository.findById(id);
 
         model.addAttribute("evenementOpt",evenementOpt.get());
