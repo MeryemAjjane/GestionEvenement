@@ -5,9 +5,14 @@ import org.event.gestionevenement.Repository.EvenementRepository;
 import org.event.gestionevenement.Repository.UtilisateurRepository;
 import org.event.gestionevenement.entities.Evaluation;
 import org.event.gestionevenement.entities.Evenement;
+import org.event.gestionevenement.entities.Participation;
 import org.event.gestionevenement.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationService {
@@ -34,5 +39,12 @@ public class EvaluationService {
         evaluationRepository.save(newEval);
         return true;
 
+    }
+    public List<Evaluation> getAllEvaluation() {
+        return evaluationRepository.findAll();
+    }
+
+    public List<Evaluation> getEvaluationByEventId(int id) {
+        return evaluationRepository.findByEvenementId(id);
     }
 }

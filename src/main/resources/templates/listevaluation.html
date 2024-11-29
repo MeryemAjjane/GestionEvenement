@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Liste des événements</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des participants</title>
+    <!-- Inclure Bootstrap et Font Awesome pour les icônes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 
@@ -263,7 +265,6 @@
         table th, table td {
             padding: 12px;
             text-align: center;
-
         }
 
         table thead {
@@ -291,12 +292,6 @@
             color: #e74c3c;
             transform: scale(1.2);
         }
-        .button-group {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-
         .alert {
             display: flex;
             justify-content: center;
@@ -408,144 +403,90 @@
                 padding: 8px;
             }
         }
-
-
-
     </style>
 </head>
-<body>
-<div th:if="${error}" class="alert alert-danger" role="alert">
-    <i class="fas fa-exclamation-circle"></i>
-    <span  th:text="${error}">Erreur ici</span>
-</div>
-<div th:if="${success}" class="alert alert-success " role="alert">
-    <i class="fas fa-check-circle" ></i>
-    <span  th:text="${success}"> Succès ici</span>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <!-- Navbar verticale élégante -->
-        <nav class="col-md-2 d-none d-md-block  sidebar">
-            <div class="sidebar-sticky">
+<body class="bg-light">
 
-
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-user"></i>
-                            <span class="nav-text" th:text="${username}"></span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " th:href="@{/}">
-                            <i class="fas fa-home"></i>
-                            <span class="nav-text">Acceuil</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/showpayement}">
-                            <i class="fas fa-coins"></i>
-                            <span class="nav-text">Paiement</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <form method="post" th:action="@{/logout}" class="d-inline">
-                            <button class="btn btn-link nav-link logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span class="nav-text">Déconnexion</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Contenu principal -->
-        <main role="main" class="col-md-10 ms-sm-auto col-lg-10 px-4">
-            <div class="widget">
-                <div class="d-flex justify-content-end mb-4">
-                    <h2><i class="fa-regular fa-calendar-minus"></i>&nbsp;&nbsp;&nbsp;Liste des Événements</h2>
-                    <a th:href="@{/admin/ajoutevent}" class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i>&nbsp;&nbsp;&nbsp;Ajouter Événement</a>
-                </div>
-
-                <table id="eventsTable" class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Titre</th>
-                        <th>Description</th>
-                        <th>Lieu</th>
-                        <th>Date</th>
-                        <th>Capacité</th>
-                        <th>Type</th>
-                        <th>Prix</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="evenement : ${evenements}">
-                        <td th:text="${evenement.id}"></td>
-                        <td th:text="${evenement.titre}"></td>
-                        <td th:text="${evenement.description}"></td>
-                        <td th:text="${evenement.lieu}"></td>
-                        <td th:text="${evenement.date}"></td>
-                        <td th:text="${evenement.capacite}"></td>
-                        <td th:text="${evenement.type}"></td>
-                        <td th:text="${evenement.prix +' DH '}"></td>
-
-                        <td class="text-center action-icons">
-                            <div class="button-group">
-                            <a th:href="@{'admin/showeditevent/' + ${evenement.id}}" class="edit-icon" title="Modifier" >
-                                <i class="fas fa-edit" ></i>
-                            </a>
-                            <a th:href="@{'admin/deleteevent/' + ${evenement.id}}" class="delete-icon" title="Supprimer"
-                               onclick="return confirm('Voulez-vous supprimer cet événement ?');">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                            <!-- <a th:href="@{'admin/participants/' + ${evenement.id}}" class="hands-icon" title="Voir les participants">
-                                 <i class="fas fa-hand-paper"></i>
-
-                          </a>-->
-                            <a th:href="@{'/admin/participants/' + ${evenement.id}}" class="users-icon" title="Voir les participants" >
-
-                                <i class="fas fa-users" ></i>
-                            </a>
-                            <a th:href="@{'/admin/waitinglist/' + ${evenement.id}}" class="waiting-list-icon" title="Liste d'attente">
-                                <i class="fas fa-clock" ></i>
-                            </a>
-                            <a th:href="@{'/admin/showevaluation/' + ${evenement.id}}" class="evaluation-icon" title="Liste Evaluation">
-                                <i class="fas fa-star" ></i>
-                            </a>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+<!-- Barre de navigation latérale -->
+<nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+    <div class="sidebar-sticky p-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-user"></i>
+                    <span class="nav-text" th:text="${username}"></span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link" th:href="@{/}">
+                    <i class="fas fa-home"></i>
+                    <span class="ms-2">Acceuil</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/showpayement}">
+                    <i class="fas fa-coins"></i>&nbsp;&nbsp;&nbsp;
+                    <span class="nav-text">Paiement</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <form method="post" th:action="@{/logout}" class="d-inline">
+                    <button class="btn btn-link nav-link logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="ms-2">Déconnexion</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
     </div>
-</div>
+</nav>
+<main role="main" class="col-md-10 ms-sm-auto col-lg-10 px-4">
+    <div class="widget">
+        <div class="d-flex align-items-center mb-3">
+            <h3> <i class="fas fa-star"></i>&nbsp;&nbsp;&nbsp; Evaluation de l'événement <span th:text="${evenementtitle}" style="color: #B353B3;"></span></h3>
+        </div>
+
+        <br>
+        <table id="eventsTable" class="table table-striped table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Nom Utilisateur</th>
+                <th>Evaluation</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="eval : ${evaluations}">
+                <td th:text="${eval.utilisateur.nomPrenom}"></td>
+                <td th:text="${eval.rating+'/5'}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</main>
+<!-- Inclure Bootstrap JS et Font Awesome JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#eventsTable').DataTable({
-                "pagingType": "simple_numbers", // Pagination style
-                "pageLength": 10, // Number of records to show per page
-                "language": {
 
-                    "sSearch": "Chercher:",  // Custom label for search box
-                    "sLengthMenu": "Afficher _MENU_ lignes",  // Custom label for showing entries
-                    "oPaginate": {
-                        "sPrevious": "Précédent", // Previous button label
-                        "sNext": "Suivant"        // Next button label
-                    },
-            "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées", // Custom info text
-            "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée", // When no data is available
-            "sInfoFiltered": " " // When data is filtered
-        }
-            });
+            "pagingType": "simple_numbers", // Pagination style
+            "pageLength": 10, // Number of records to show per page
+            "language": {
+                "sSearch": "Chercher:",  // Custom label for search box
+                "sLengthMenu": "Afficher _MENU_ lignes",  // Custom label for showing entries
+                "oPaginate": {
+                    "sPrevious": "Précédent", // Previous button label
+                    "sNext": "Suivant"        // Next button label
+                },
+                "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées", // Custom info text
+                "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrée", // When no data is available
+                "sInfoFiltered": " " // When data is filtered
+            }
         });
+    });
 </script>
-
-
 </body>
 </html>

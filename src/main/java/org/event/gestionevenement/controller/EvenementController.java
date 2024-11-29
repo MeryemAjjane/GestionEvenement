@@ -2,9 +2,11 @@ package org.event.gestionevenement.controller;
 
 import org.event.gestionevenement.Repository.EvenementRepository;
 import org.event.gestionevenement.Repository.PaiementRepository;
+import org.event.gestionevenement.entities.Evaluation;
 import org.event.gestionevenement.entities.Evenement;
 import org.event.gestionevenement.entities.Paiement;
 import org.event.gestionevenement.entities.Utilisateur;
+import org.event.gestionevenement.service.EvaluationService;
 import org.event.gestionevenement.service.EvenementServiceImpl;
 import org.event.gestionevenement.service.ParticipationService;
 import org.event.gestionevenement.service.UserDetailServiceImpl;
@@ -36,6 +38,8 @@ public class EvenementController {
     private EvenementRepository eventRep;
     @Autowired
     private PaiementRepository paiementRepository;
+    @Autowired
+    private EvaluationService evaluationService;
 
 
     // Afficher form event
@@ -167,6 +171,21 @@ public class EvenementController {
         model.addAttribute("paye", paye);
         return "listepayement";
     }
+    @GetMapping("/showevaluation/{id}")
+    public String afficherEvaluation(@PathVariable int id,Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // récupère le nom d'utilisateur (user connecté)
+        // Trouver l'utilisateur connecté
+        Utilisateur user = userDetailServiceImpl.findByUsername(username); // Trouver l'utilisateur par son nom
+        model.addAttribute("username", username);
+        Optional<Evenement> evenementOpt = eventRep.findById(id);
+        Evenement evenement = evenementOpt.get();
+        List<Evaluation> evaluations = evaluationService.getEvaluationByEventId(id);
+        model.addAttribute("evenementtitle", evenement.getTitre());
+        model.addAttribute("evaluations",evaluations);
+        return "listevaluation";
+    }
+
 
 
 }
