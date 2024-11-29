@@ -31,6 +31,12 @@ public class EvaluationService {
         if (evenement == null || utilisateur == null) {
             return false;
         }
+        Optional<Evenement> evenementOpt = evenementRepository.findById(event_id);
+        Optional<Utilisateur> utilisateurOpt = utilisateurRepository.findById(user_id);
+
+        if (!evenementOpt.isPresent() || !utilisateurOpt.isPresent()) {
+            return false;
+        }
         Evaluation newEval = Evaluation.builder()
                 .utilisateur(utilisateur)
                 .evenement(evenement)

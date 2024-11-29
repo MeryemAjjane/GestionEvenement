@@ -1,5 +1,6 @@
 package org.event.gestionevenement.controller;
 
+import org.event.gestionevenement.Repository.EvaluationRepository;
 import org.event.gestionevenement.Repository.EvenementRepository;
 import org.event.gestionevenement.Repository.ParticipationRepository;
 import org.event.gestionevenement.entities.Evenement;
@@ -38,65 +39,10 @@ public class ParticipationController {
     UserDetailServiceImpl userDetailService;
     @Autowired
     private EvenementServiceImpl evenementServiceImpl;
+    @Autowired
+    private EvaluationRepository evaluationRepository;
 
-    //    @PostMapping("/participer/{id}")
-//    public String participer(@PathVariable int id) {
-//        try {
-//            // Récupérer l'utilisateur connecté
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            String username = authentication.getName();
-//            Utilisateur user = userService.findByUsername(username);
-//
-//            // Vérifier si l'événement existe
-//            Optional<Evenement> evenementOpt = evenementRepository.findById(id);
-//            if (evenementOpt.isEmpty()) {
-//                return "redirect:/?error=eventNotFound";
-//            }
-//            Evenement evenement = evenementOpt.get();
-//
-//            // Vérifier si l'utilisateur a déjà participé
-//            if (participationRepository.existsByUserAndEvenement(user, evenement)) {
-//                return "redirect:/?error=alreadyParticipated";
-//            }
-//
-//            // Vérifier la capacité
-//            if (evenement.getCapacite() <= 0) {
-//                return "redirect:/?error=capacityReached";
-//            }
-//
-//            // Ajouter la participation
-//            Participation participation = new Participation();
-//            participation.setUser(user);
-//            participation.setEvenement(evenement);
-//            participationRepository.save(participation);
-//
-//            // Réduire la capacité
-//            evenement.setCapacite(evenement.getCapacite() - 1);
-//            evenementRepository.save(evenement);
-//
-//            // Envoi d'email de confirmation
-//            String subject = "Confirmation de participation";
-//            String body = "Bonjour " + user.getUsername() + ",\n\n" +
-//                    "Votre participation à l'événement '" + evenement.getTitre() + "' a été confirmée.";
-//            emailService.sendEmail(user.getEmail(), subject, body);
-//
-//            return "redirect:/?success=participationAdded";
-//        } catch (Exception e) {
-//            e.printStackTrace(); // Log de l'erreur pour le débogage
-//            return "redirect:/?error=internalError";
-//        }
-//    }
-// Afficher form event
-@GetMapping("/pageevaluate/{id}")
-public String afficherFormulaireAjoutevale(@PathVariable int id, Model model) {
-        // Récupérer l'utilisateur connecté à partir de Spring Security
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
-        model.addAttribute("username", username);
-        Evenement evenement = evenementServiceImpl.getEvenement(id);
-        model.addAttribute("evenement", evenement);
-        return "evaluation";
-    }
+
     @PostMapping("/waitingList/{id}")
     public String addToWaitingList(@PathVariable int id) {
         // Récupérer l'utilisateur connecté
@@ -133,6 +79,17 @@ public String afficherFormulaireAjoutevale(@PathVariable int id, Model model) {
 
         return "redirect:/?success=waitingListAdded";
     }
+    // Afficher form evaluate
+    @GetMapping("/pageevaluate/{id}")
+    public String afficherFormulaireAjoutevale(@PathVariable int id, Model model) {
+        // Récupérer l'utilisateur connecté à partir de Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
+        model.addAttribute("username", username);
+        Evenement evenement = evenementServiceImpl.getEvenement(id);
+        model.addAttribute("evenement", evenement);
+        return "evaluation";
+    }
     @PostMapping("/rate")
     public String rateEvent(@RequestParam(name = "id") int id,Model model,
                             @RequestParam(name = "rating") int rating,
@@ -148,6 +105,12 @@ public String afficherFormulaireAjoutevale(@PathVariable int id, Model model) {
         if (utilisateur == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur non trouvé.");
             return "redirect:/";
+        }
+        // Vérifier si l'utilisateur a déjà participé à l'événement
+        Optional<Evenement> evenementOpt = evenementRepository.findById(id);
+        Evenement evenement = evenementOpt.get();
+        if (evaluationRepository.existsByUtilisateurAndEvenement(utilisateur, evenement)) {
+            return "redirect:/?error=alreadyEvaluated";
         }
         // Ajouter la notation
         boolean response = evaluationService.AddRating(rating, id, utilisateur.getId());
