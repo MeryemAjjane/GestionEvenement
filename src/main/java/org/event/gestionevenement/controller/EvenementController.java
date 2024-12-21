@@ -1,5 +1,6 @@
 package org.event.gestionevenement.controller;
 
+import jakarta.validation.Valid;
 import org.event.gestionevenement.Repository.EvenementRepository;
 import org.event.gestionevenement.Repository.PaiementRepository;
 import org.event.gestionevenement.entities.Evaluation;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -57,24 +59,32 @@ public class EvenementController {
 
     // submit event
     @PostMapping("/addevent")
-    public String ajouterEvenement(@ModelAttribute Evenement evenement,Model model) {
-        // Récupérer l'utilisateur connecté à partir de Spring Security
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
+    public String ajouterEvenement(@Valid @ModelAttribute Evenement evenement, Model model, BindingResult bindingResult) {
+        try {
+            // Récupérer l'utilisateur connecté à partir de Spring Security
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
 
 
-        model.addAttribute("username", username);
-        // Trouver l'utilisateur connecté
-        Utilisateur user = userDetailServiceImpl.findByUsername(username);  // Assurez-vous d'avoir ce service
-        model.addAttribute("user", user);
-        // Associer l'événement à l'utilisateur connecté
-        evenement.setUser(user);  // Assurez-vous que l'événement a un attribut "user" pour lier l'utilisateur
+            model.addAttribute("username", username);
+            // Trouver l'utilisateur connecté
+            Utilisateur user = userDetailServiceImpl.findByUsername(username);  // Assurez-vous d'avoir ce service
+            model.addAttribute("user", user);
+            // Associer l'événement à l'utilisateur connecté
+            evenement.setUser(user);  // Assurez-vous que l'événement a un attribut "user" pour lier l'utilisateur
 
-        // Ajouter l'événement à la base de données
-        evenementService.addEvenement(evenement);
+            // Ajouter l'événement à la base de données
+            evenementService.addEvenement(evenement);
 
-        return "redirect:/";  // Rediriger après l'ajout
+            return "redirect:/";  // Rediriger après l'ajout
+    } catch(IllegalArgumentException e)
+
+    {
+        // Ajouter le message d'erreur pour l'afficher dans le formulaire
+        model.addAttribute("errorMessage", e.getMessage());
+        return "ajoutevent"; // Recharger la page avec les erreurs
     }
+}
 
     // Afficher form edit event
     @GetMapping("/showeditevent/{id}")

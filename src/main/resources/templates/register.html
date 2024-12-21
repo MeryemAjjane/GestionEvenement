@@ -19,7 +19,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 380px;
+            width: 500px;
             margin-top: 1%;
             box-sizing: border-box;
         }
@@ -54,6 +54,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 14px;
+            
         }
 
         input[type="checkbox"] {
@@ -90,6 +91,11 @@
         a:hover {
             text-decoration: underline;
         }
+        .error {
+            color: red;
+            font-size: 0.8em;
+            margin: 5px;
+        }
     </style>
     <script>
         function toggleCompanyField() {
@@ -108,37 +114,46 @@
     <!-- Champ Nom complet -->
     <div class="form-group">
         <label for="nomPrenom">Nom complet:</label>
-        <input type="text" name="nomPrenom" placeholder="Nom complet" required>
+        <input type="text" name="nomPrenom" id="nomPrenom" placeholder="Nom complet">
     </div>
 
     <!-- Champ Email -->
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" id="email" placeholder="Email">
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></p>
     </div>
 
     <!-- Champ Nom d'utilisateur -->
     <div class="form-group">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+        <input type="text" name="username" id="username" placeholder="Nom d'utilisateur">
+        <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></p>
     </div>
 
     <!-- Champ Numéro de téléphone -->
     <div class="form-group">
         <label for="numTele">Numéro de téléphone:</label>
-        <input type="text" name="numTele" placeholder="Numéro de téléphone" required>
+        <input type="text" name="numTele" id="numTele" placeholder="Numéro de téléphone">
+        <p th:if="${#fields.hasErrors('numTele')}" th:errors="*{numTele}" class="error"></p>
+
     </div>
 
     <!-- Champ Mot de passe -->
     <div class="form-group">
         <label for="password">Mot de passe:</label>
-        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="password" name="password" id="password" placeholder="Mot de passe">
+        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></p>
+
+
     </div>
 
     <!-- Champ Confirmer mot de passe -->
     <div class="form-group">
         <label for="confirmPassword">Confirmer le mot de passe:</label>
-        <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" required>
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe">
+        <p th:if="${confirmPasswordError}" th:text="${confirmPasswordError}" class="error"></p>
+
     </div>
 
     <!-- Case à cocher pour organiser -->
@@ -152,7 +167,7 @@
     <div id="companyField" style="display: none;">
         <div class="form-group">
             <label for="companyName">Nom de l'entreprise:</label>
-            <input type="text" name="companyName" placeholder="Nom de l'entreprise">
+            <input type="text" name="companyName" id="companyName" placeholder="Nom de l'entreprise">
         </div>
     </div>
 

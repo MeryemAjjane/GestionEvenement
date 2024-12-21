@@ -9,6 +9,7 @@ import org.event.gestionevenement.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +23,29 @@ public class EvenementServiceImpl implements EvenementService {
 
     @Override
     public Evenement addEvenement(Evenement evenement) {
+        if (evenement.getTitre() == null || evenement.getTitre().isEmpty()) {
+            throw new IllegalArgumentException("Le titre est obligatoire");
+        }
+        if (evenement.getLieu() == null || evenement.getLieu().isEmpty()) {
+            throw new IllegalArgumentException("Le lieu est obligatoire");
+        }
+        if (evenement.getDescription() == null || evenement.getDescription().isEmpty()) {
+            throw new IllegalArgumentException("La description est obligatoire");
+        }
+        if (evenement.getPrix()==0|| evenement.getPrix()<0) {
+            throw new IllegalArgumentException("Le prix doit etre superieur a 0");
+        }
+        if (evenement.getCapacite()==0|| evenement.getCapacite()<0) {
+            throw new IllegalArgumentException("La capacite doit etre superieur a 0");
+        }
+        // Validation de la date (si la date est avant la date actuelle)
+        if (evenement.getDate() == null) {
+            throw new IllegalArgumentException("La date est obligatoire");
+        } else if (evenement.getDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("La date de evenement ne peut pas etre dans le passe.");
+        }
+
+
         return evenementRepository.save(evenement);
     }
 

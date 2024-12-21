@@ -78,9 +78,7 @@ public class PaymentController {
             Optional<Evenement> evenementOpt = evenementRepository.findById(eventId);
             Evenement evenement = evenementOpt.get();
             model.addAttribute("evenement", evenement);
-//            Payment payment = paypalService.createPayment(10.0,"USD",
-//                    "paypal","sale","bbbbbb"
-//                    ,cancelUrl,successUrl);
+//
 
             for (Links links: payment.getLinks()){
                 if (links.getRel().equals("approval_url")){
@@ -92,7 +90,7 @@ public class PaymentController {
         }catch (PayPalRESTException p){
             log.error("Error occurred ",p);
         }
-        return  new RedirectView("/payment/error");
+        return  new RedirectView("/user/payment/error");
     }
 
     @GetMapping("payment/success/{id}")

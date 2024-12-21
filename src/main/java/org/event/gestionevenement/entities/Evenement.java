@@ -1,6 +1,8 @@
 package org.event.gestionevenement.entities;
 
 import jakarta.persistence.*;
+
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -19,10 +20,13 @@ public class Evenement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    //@NotEmpty(message = "Le titre ne peut pas être vide")
     private String titre;
+    //@NotEmpty(message = "La description ne peut pas être vide")
     private String description;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+    //@NotEmpty(message = "Le lieu ne peut pas être vide")
     private String lieu;
     private double capacite;
     private String type;

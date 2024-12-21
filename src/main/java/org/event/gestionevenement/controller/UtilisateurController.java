@@ -1,5 +1,6 @@
 package org.event.gestionevenement.controller;
 
+import jakarta.validation.Valid;
 import org.event.gestionevenement.Repository.RoleRepository;
 import org.event.gestionevenement.Repository.UtilisateurRepository;
 import org.event.gestionevenement.entities.Role;
@@ -8,6 +9,7 @@ import org.event.gestionevenement.service.CompteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +36,20 @@ public class UtilisateurController {
     }
 
     @PostMapping("/register")
-    public String registerUser(
-            @ModelAttribute Utilisateur utilisateur,
+    public String registerUser(@Valid @ModelAttribute Utilisateur utilisateur, BindingResult bindingResult,Model model,
             @RequestParam(value = "organisateur", required = false) String isOrganisateur,
-            @RequestParam(value = "companyName", required = false) String companyName) {
+                               @RequestParam("password") String password,
+                               @RequestParam("confirmPassword") String confirmPassword,@RequestParam(value = "companyName", required = false) String companyName) {
 
+        // Vérifier les erreurs de validation
+        if (bindingResult.hasErrors()) {
+            // Ajouter les erreurs au modèle pour les afficher dans la vue
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            if (password != null && confirmPassword != null && !password.equals(confirmPassword)) {
+                model.addAttribute("confirmPasswordError", "La confirmation du mot de passe est different au mot de passe.");
+            }
+                return "register"; // Retourner à la vue du formulaire
+        }
         // Générer un ID unique
         utilisateur.setId(UUID.randomUUID().toString());
 

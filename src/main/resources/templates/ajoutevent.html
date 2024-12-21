@@ -193,24 +193,42 @@
         <form th:action="@{/admin/addevent}" th:object="${evenement}" method="post">
             <div class="mb-3">
                 <label for="title" class="form-label">Titre</label>
-                <input type="text" th:field="*{titre}" class="form-control" id="title" name="title" required>
+                <input type="text" th:field="*{titre}" class="form-control" id="title" name="title">
+                <p th:if="${errorMessage == 'Le titre est obligatoire'}" style="color:red;">
+                    Le titre est obligatoire
+                </p>
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text"  th:field="*{lieu}" class="form-control" id="location" name="location" required>
+                <input type="text"  th:field="*{lieu}" class="form-control" id="location" name="location">
+                <p th:if="${errorMessage == 'Le lieu est obligatoire'}" style="color:red;">
+                    Le lieu est obligatoire
+                </p>
             </div>
 
 
             <div class="mb-3">
                 <label for="date" class="form-label">Date</label>
-                <input type="date"  th:field="*{date}" class="form-control" id="date" name="date" required>
+                <input type="date"  th:field="*{date}" class="form-control" id="date" name="date">
+                <p th:if="${errorMessage == 'La date est obligatoire'}" style="color:red;">
+                    La date est obligatoire
+                </p>
+                <p th:if="${errorMessage == 'La date de evenement ne peut pas etre dans le passe.'}" style="color:red;">
+                    La date de l'événement ne peut pas être dans le passé.
+                </p>
             </div>
             <div class="mb-3">
                 <label for="capacity" class="form-label">Capacité</label>
-                <input type="number" th:field="*{capacite}" class="form-control" id="capacity" name="capacity" required>
+                <input type="number" th:field="*{capacite}" class="form-control" id="capacity" name="capacity">
+                <p th:if="${errorMessage == 'La capacite doit etre superieur a 0'}" style="color:red;">
+                    La capacite doit etre superieur a 0
+                </p>
             </div>
             <label for="prix" class="form-label">Prix</label>
             <input type="number" id="prix" class="form-control" th:field="*{prix}" />
+            <p th:if="${errorMessage == 'Le prix doit etre superieur a 0'}" style="color:red;">
+                Le prix doit etre superieur a 0
+            </p>
             <div class="mb-3">
                 <label for="type" class="form-label" th:field="*{type}"> Type de l' evenement</label>
                 <select class="form-select" id="type" name="type" required>
@@ -221,7 +239,10 @@
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" style="max-height:4px" id="description" th:field="*{description}" name="description" rows="3" required></textarea>
+                <textarea class="form-control" style="max-height:4px" id="description" th:field="*{description}" name="description" rows="3"></textarea>
+                <p th:if="${errorMessage == 'La description est obligatoire'}" style="color:red;">
+                    La description est obligatoire
+                </p>
             </div>
             <button type="submit" class="btn btn-primary">Creer</button>
         </form>
