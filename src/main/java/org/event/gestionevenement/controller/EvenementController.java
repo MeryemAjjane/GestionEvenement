@@ -148,27 +148,38 @@ public class EvenementController {
 
     @GetMapping("/waitinglist/{id}")
     public String showWaitingList(@PathVariable int id, Model model) {
-        // Récupérer l'utilisateur connecté à partir de Spring Security
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();  // Récupère le nom d'utilisateur (user connecté)
+        try {
+            // Récupérer l'utilisateur connecté à partir de Spring Security
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName(); // Récupère le nom d'utilisateur (user connecté)
 
+            model.addAttribute("username", username);
 
-        model.addAttribute("username", username);
-        Optional<Evenement> evenementOpt = eventRep.findById(id);
-        if (evenementOpt.isEmpty()) {
-            return "redirect:/admin?error=eventNotFound";
+            // Vérifie si l'événement existe
+            Optional<Evenement> evenementOpt = eventRep.findById(id);
+            if (evenementOpt.isEmpty()) {
+                model.addAttribute("errorMessage", "Événement introuvable.");
+                return "redirect:/"; // Vue HTML pour afficher les erreurs
+            }
+
+            Evenement evenement = evenementOpt.get();
+
+            // Trier la liste d'attente par ordre croissant de date d'enregistrement
+            List<Utilisateur> sortedWaitingList = evenement.getWaitingList().stream()
+                    .sorted(Comparator.comparing(Utilisateur::getRegistrationDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+
+            model.addAttribute("waitingList", sortedWaitingList);
+            model.addAttribute("eventTitle", evenement.getTitre());
+            return "waitingList"; // La vue HTML qui affichera la liste d'attente
+
+        } catch (Exception e) {
+            // Capture les exceptions et affiche un message d'erreur simple
+            model.addAttribute("errorMessage", "Une erreur est survenue lors de la récupération de la liste d'attente.");
+            return "redirect:/"; // Vue HTML pour afficher les erreurs
         }
-        Evenement evenement = evenementOpt.get();
-
-        // Trier la liste d'attente par ordre croissant de date d'enregistrement
-        List<Utilisateur> sortedWaitingList = evenement.getWaitingList().stream()
-                .sorted(Comparator.comparing(Utilisateur::getRegistrationDate))
-                .collect(Collectors.toList());
-
-        model.addAttribute("waitingList", sortedWaitingList);
-        model.addAttribute("eventTitle", evenement.getTitre());
-        return "waitingList"; // La vue HTML qui affichera la liste d'attente
     }
+
     // Afficher la liste de payement
     @GetMapping("/showpayement")
     public String afficherPayement(Model model) {

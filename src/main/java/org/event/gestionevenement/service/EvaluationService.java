@@ -45,9 +45,7 @@ public class EvaluationService {
         return true;
 
     }
-    public List<Evaluation> getAllEvaluation() {
-        return evaluationRepository.findAll();
-    }
+
 
     public List<Evaluation> getEvaluationByEventId(int id) {
         return evaluationRepository.findByEvenementId(id);

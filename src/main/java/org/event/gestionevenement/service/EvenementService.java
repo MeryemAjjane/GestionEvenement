@@ -11,9 +11,7 @@ public interface EvenementService {
     public Evenement getEvenement(int id);
     public List<Evenement> getAllEvenement();
     public void deleteEvenement(int id);
-    public List<Evenement> getEvenementByEvenementName(String titre);
     public List<Evenement> findByUser(Utilisateur user);
-    public List<Utilisateur> getParticipantsByEventId(int eventId);
 
 
     }

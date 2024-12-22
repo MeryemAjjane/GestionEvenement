@@ -86,39 +86,13 @@ public class EvenementServiceImpl implements EvenementService {
         }
     }
 
-
-
-
-    @Override
-    public List<Evenement> getEvenementByEvenementName(String titre) {
-        return evenementRepository.findEvenementByTitre(titre);
-    }
     // Récupérer les événements créés par un utilisateur spécifique
     public List<Evenement> findByUser(Utilisateur user) {
         return evenementRepository.findByUser(user);  // Utiliser la méthode de repository pour filtrer par utilisateur
     }
 
-    public List<Utilisateur> getParticipantsByEventId(int eventId) {
-        Optional<Evenement> evenement = evenementRepository.findById(eventId);
-        if (evenement.isPresent()) {
-            List<Participation> participations = participationRepository.findByEvenementId(eventId);
-            return participations.stream()
-                    .map(Participation::getUser) // Récupérer les utilisateurs depuis les participations
-                    .collect(Collectors.toList());
-        }
-        throw new RuntimeException("Événement introuvable avec l'ID : " + eventId);
-    }
-}
-//    public void removeParticipant(int eventId,String userId) {
-//        Optional<Evenement> evenement = evenementRepository.findById(eventId);
-//        Optional<Utilisateur> user =utilisateurRepository.findById(userId);
-//        if (evenement.isPresent() && user.isPresent()) {
-//            evenement.get().getParticipants().remove(user.get());
-//            evenementRepository.save(evenement.get());
-//        } else {
-//            throw new RuntimeException("Événement ou utilisateur introuvable.");
-//        }
-//    }
+
+   }
 
 
 
